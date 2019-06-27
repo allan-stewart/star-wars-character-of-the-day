@@ -7,6 +7,13 @@ namespace CharacterOfTheDay
 {
     public class StarWarsCharacterOfTheDay
     {
+        private readonly ISwapiWrapper swapiWrapper;
+
+        public StarWarsCharacterOfTheDay(ISwapiWrapper swapiWrapper)
+        {
+            this.swapiWrapper = swapiWrapper;
+        }
+
         public void Display()
         {
             var character = GetRandomCharacter();
@@ -18,10 +25,9 @@ namespace CharacterOfTheDay
             }
         }
 
-        private StarWarsCharacter GetRandomCharacter()
+        public StarWarsCharacter GetRandomCharacter()
         {
-            var api = new SwapiWrapper();
-            var characters = api.GetCharacters();
+            var characters = swapiWrapper.GetCharacters();
             var random = new Random();
             var index = random.Next(0, characters.Length);
             return characters[index];
@@ -29,8 +35,7 @@ namespace CharacterOfTheDay
 
         private void DisplayStarship(string url)
         {
-            var api = new SwapiWrapper();
-            var vehicle = api.GetVehicleFromUrl(url);
+            var vehicle = swapiWrapper.GetVehicleFromUrl(url);
             Console.WriteLine($"* {vehicle.Name} ({vehicle.Model})");
         }
     }

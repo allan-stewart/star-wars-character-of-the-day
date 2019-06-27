@@ -5,8 +5,19 @@ using Newtonsoft.Json;
 
 namespace CharacterOfTheDay.Swapi
 {
-    public class SwapiWrapper
+    public interface ISwapiWrapper
     {
+        StarWarsCharacter[] GetCharacters();
+        StarWarsVehicle GetVehicleFromUrl(string url);
+    }
+    public class SwapiWrapper: ISwapiWrapper
+    {
+        private readonly IHttpClient httpClient;
+
+        public SwapiWrapper(IHttpClient httpClient)
+        {
+            this.httpClient = httpClient;
+        }
         public StarWarsCharacter[] GetCharacters()
         {
             var data = JsonConvert.DeserializeObject<StarWarsCharacterResultSet>(GetData("https://swapi.co/api/people/"));
@@ -19,12 +30,12 @@ namespace CharacterOfTheDay.Swapi
         }
 
         private string GetData(string url) {
-            var client = new HttpClient();
+    
             var request = new HttpRequest {
                 Method = HttpMethod.GET,
                 Url = url
             };
-            var response = client.Execute(request);
+            var response = this.httpClient.Execute(request);
             if (response.StatusCode != 200) {
                 throw new Exception($"Unexpected status code: {response.StatusCode}");
             }
