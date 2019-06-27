@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CharacterOfTheDay
+﻿namespace CharacterOfTheDay
 {
     class Program
     {
